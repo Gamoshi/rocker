@@ -16,15 +16,18 @@
 package com.fizzed.rocker;
 
 import com.fizzed.rocker.runtime.DefaultHtmlStringify;
+import com.fizzed.rocker.runtime.DefaultJsonStringify;
 import com.fizzed.rocker.runtime.RawStringify;
 import com.fizzed.rocker.runtime.RockerRuntime;
 
 public interface RockerStringify {
     
     static public final RockerStringify RAW = new RawStringify();
-    //static public final RockerStringify HTML = RockerRuntime.createDefaultHtmlStringify();
+
     static public final RockerStringify HTML = new DefaultHtmlStringify();
-    
+
+    static public final RockerStringify JSON = new DefaultJsonStringify();
+
     String s(String str);
     
     String s(Object obj);

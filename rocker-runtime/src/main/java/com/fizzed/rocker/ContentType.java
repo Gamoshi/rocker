@@ -15,9 +15,12 @@
  */
 package com.fizzed.rocker;
 
+import javax.swing.text.html.HTML;
+
 public enum ContentType {
     
     RAW,
+    JSON,
     HTML;
     
     static public boolean discardLogicWhitespace(ContentType contentType) {
@@ -25,6 +28,8 @@ public enum ContentType {
             case RAW:
                 return false;
             case HTML:
+                return true;
+            case JSON:
                 return true;
         }
         throw new IllegalArgumentException("Unsupported content type " + contentType);
@@ -34,6 +39,8 @@ public enum ContentType {
         switch (contentType) {
             case RAW:
                 return RockerStringify.RAW;
+            case JSON:
+                return RockerStringify.JSON;
             case HTML:
                 return RockerStringify.HTML;
         }
