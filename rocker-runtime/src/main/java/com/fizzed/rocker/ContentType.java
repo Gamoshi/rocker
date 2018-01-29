@@ -15,8 +15,6 @@
  */
 package com.fizzed.rocker;
 
-import javax.swing.text.html.HTML;
-
 public enum ContentType {
     
     RAW,
