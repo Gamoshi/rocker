@@ -27,7 +27,7 @@ public class JavaGeneratorRunnable implements Runnable {
         this.parser = new TemplateParser(this.configuration);
         this.generator = new JavaGenerator(this.configuration);
         this.templateFiles = new ArrayList<>();
-        this.suffixRegex = ".*\\.rocker\\.(raw|html)$";
+        this.suffixRegex = ".*\\.rocker\\.(raw|html|json)$";
         this.failOnError = true;
     }
 

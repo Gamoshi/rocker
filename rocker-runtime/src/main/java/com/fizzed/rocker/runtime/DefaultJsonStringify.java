@@ -35,64 +35,57 @@ public class DefaultJsonStringify extends RawStringify {
     }
     
     // all primitives require no further escaping
-    
+
     static public final String escape(String str) {
         if (str == null) {
             return str;
         }
+
         int size = str.length();
-        
+
         // if empty string immediately return it
         if (size == 0) {
             return str;
         }
-        StringBuilder builder = new StringBuilder();
 
-        int i = 0;
-        while (i < str.length()) {
-            char delimiter = str.charAt(i); i++;
+        StringBuilder output = new StringBuilder(size);
+        for(int i=0; i<str.length(); i++) {
+            char ch = str.charAt(i);
+            int chx = (int) ch;
 
-            if(delimiter == '\\' && i < str.length()) {
+            // let's not put any nulls in our strings
+            assert(chx != 0);
 
-                // consume first after backslash
-                char ch = str.charAt(i); i++;
-
-                if(ch == '\\' || ch == '/' || ch == '"' || ch == '\'') {
-                    builder.append(ch);
-                }
-                else if(ch == 'n') builder.append('\n');
-                else if(ch == 'r') builder.append('\r');
-                else if(ch == 't') builder.append('\t');
-                else if(ch == 'b') builder.append('\b');
-                else if(ch == 'f') builder.append('\f');
-                else if(ch == 'u') {
-
-                    StringBuilder hex = new StringBuilder();
-
-                    // expect 4 digits
-                    if (i+4 > str.length()) {
-                        throw new RuntimeException("Not enough unicode digits! ");
-                    }
-                    for (char x : str.substring(i, i + 4).toCharArray()) {
-                        if(!Character.isLetterOrDigit(x)) {
-                            throw new RuntimeException("Bad character in unicode escape.");
-                        }
-                        hex.append(Character.toLowerCase(x));
-                    }
-                    i+=4; // consume those four digits.
-
-                    int code = Integer.parseInt(hex.toString(), 16);
-                    builder.append((char) code);
-                } else {
-                    throw new RuntimeException("Illegal escape sequence: \\"+ch);
-                }
+            if(ch == '\n') {
+                output.append("\\n");
+            } else if(ch == '\t') {
+                output.append("\\t");
+            } else if(ch == '\r') {
+                output.append("\\r");
+            } else if(ch == '\\') {
+                output.append("\\\\");
+            } else if(ch == '"') {
+                output.append("\\\"");
+            } else if(ch == '\b') {
+                output.append("\\b");
+            } else if(ch == '\f') {
+                output.append("\\f");
+            } else if(chx >= 0x10000) {
+                assert false : "Java stores as u16, so it should never give us a character that's bigger than 2 bytes. It literally can't.";
+            } else if(chx > 127) {
+                output.append(String.format("\\u%04x", chx));
             } else {
-                builder.append(delimiter);
+                output.append(ch);
             }
         }
 
-        return builder.toString();
 
-    }   
+        if (output == null) {
+            return str;
+        }
+        return output.toString();
+    }
+
+
 }
 
